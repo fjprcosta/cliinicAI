@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClinicAI — Recepcionista Inteligente para Clínicas</title>
+  <meta name="description" content="ClinicAI é a recepcionista com inteligência artificial para clínicas médicas, odontológicas e veterinárias. Atendimento automático via WhatsApp, 24 horas por dia." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #0d7c4f;
+      --green-light: #10a366;
+      --green-pale: #e6f4ee;
+      --cream: #faf8f4;
+      --ink: #111a14;
+      --ink-soft: #3a4a3e;
+      --border: #d4e4da;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 5vw;
+      background: rgba(250,248,244,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
+
+    .logo span {
+      color: var(--ink);
+    }
+
+    nav a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      transition: all 0.2s;
+    }
+
+    nav a:hover {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 5vw 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(13,124,79,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.7; }
+    }
+
+    .hero-inner {
+      max-width: 860px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--green-pale);
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      border: 1px solid rgba(13,124,79,0.2);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s forwards;
+    }
+
+    .badge::before {
+      content: '●';
+      font-size: 0.5rem;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--green);
+      color: white;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.25s;
+      box-shadow: 0 4px 20px rgba(13,124,79,0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--green-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(13,124,79,0.35);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--ink-soft);
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: 1.5px solid var(--border);
+      transition: all 0.25s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* FEATURES */
+    .features {
+      padding: 6rem 5vw;
+      background: white;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 3.5rem;
+      max-width: 480px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--cream);
+      transition: all 0.25s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--green);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(13,124,79,0.1);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green-pale);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .feature-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 0.6rem;
+      color: var(--ink);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* FOR WHO */
+    .forwho {
+      padding: 6rem 5vw;
+      background: var(--cream);
+    }
+
+    .clinics-list {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    .clinic-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      transition: all 0.2s;
+    }
+
+    .clinic-tag:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* CONTACT */
+    .contact {
+      padding: 6rem 5vw;
+      background: var(--ink);
+      color: white;
+      text-align: center;
+    }
+
+    .contact .section-label { color: #4fc98a; }
+
+    .contact h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .contact p {
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-item:hover { color: #4fc98a; }
+
+    /* FOOTER */
+    footer {
+      padding: 1.8rem 5vw;
+      background: #0a0f0c;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer .logo { font-size: 1.1rem; }
+
+    footer p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      nav a { display: none; }
+      .hero { padding-top: 6rem; }
+      .contact-info { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Clinic<span>AI</span></div>
+    <a href="#contato">Fale conosco</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="badge">Inteligência Artificial para Saúde</div>
+      <h1>Sua clínica atendendo<br /><em>24 horas por dia</em></h1>
+      <p>ClinicAI é a recepcionista virtual com IA que agenda consultas, responde dúvidas e qualifica pacientes automaticamente via WhatsApp — sem interromper sua equipe.</p>
+      <div class="hero-cta">
+        <a href="#contato" class="btn-primary">
+          <span>Quero conhecer</span> →
+        </a>
+        <a href="#funcionalidades" class="btn-secondary">
+          Ver funcionalidades
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="funcionalidades">
+    <div class="section-label">Funcionalidades</div>
+    <h2 class="section-title">Tudo que sua recepção precisa, automatizado</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Atendimento via WhatsApp</h3>
+        <p>Responde pacientes em segundos, a qualquer hora do dia ou da noite, sem deixar ninguém esperando.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Agendamento Inteligente</h3>
+        <p>Marca, confirma e reagenda consultas automaticamente de acordo com a disponibilidade da sua clínica.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>IA Treinada para Saúde</h3>
+        <p>Conversas naturais e contextualmente adequadas para o ambiente médico, odontológico e veterinário.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Relatórios e Métricas</h3>
+        <p>Acompanhe volume de atendimentos, taxa de conversão e horários de pico em um painel simples.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="forwho">
+    <div class="section-label">Para quem é</div>
+    <h2 class="section-title">Desenvolvido para clínicas de saúde</h2>
+    <div class="clinics-list">
+      <div class="clinic-tag">🩺 Clínicas Médicas</div>
+      <div class="clinic-tag">🦷 Consultórios Odontológicos</div>
+      <div class="clinic-tag">🐾 Clínicas Veterinárias</div>
+      <div class="clinic-tag">🧠 Psicologia e Terapia</div>
+      <div class="clinic-tag">💆 Clínicas Estéticas</div>
+      <div class="clinic-tag">🏥 Clínicas Multiprofissionais</div>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <div class="section-label">Contato</div>
+    <h2>Vamos conversar?</h2>
+    <p>Entre em contato e saiba como o ClinicAI pode transformar o atendimento da sua clínica.</p>
+    <div class="contact-info">
+      <a href="mailto:contato@clinicai.app" class="contact-item">
+        ✉️ contato@clinicai.app
+      </a>
+      <a href="https://wa.me/5521999999999" class="contact-item">
+        💬 WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo" style="color:#4fc98a;">Clinic<span style="color:rgba(255,255,255,0.5)">AI</span></div>
+    <p>© 2025 ClinicAI · Rio de Janeiro, Brasil · CNPJ em processo de abertura</p>
+  </footer>
+
+</body>
+</html>
